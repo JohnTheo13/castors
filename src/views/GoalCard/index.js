@@ -24,11 +24,11 @@ class GoalCard extends Component {
   render() {
     return(
       <CollapsebleRoadmap>
-        redux test <strong>{this.props.name}</strong>
-        <h6><b>{this.props.number}</b></h6>
+        redux test <strong>{this.props.card.name}</strong>
+        <h6><b>{this.props.card.number}</b></h6>
         <ul>
         {
-          this.props.names.map(name => <li>{name}</li>)
+          this.props.card.names.map(name => <li>{name}</li>)
         }
         </ul>
         <input type="text" onChange={e => this.onChange(e.target.value)} />
@@ -38,10 +38,8 @@ class GoalCard extends Component {
   }
 }
 
-const mapToProps = ({ card: { admin, count, names }}) =>  ({
-  name: admin.name,
-  number: count,
-  names: names
+const mapToProps = card =>  ({
+  ...card
 })
 
 const mapDispatchToProps = dispatch => ({

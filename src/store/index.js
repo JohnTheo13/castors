@@ -1,8 +1,10 @@
 import {createStore, combineReducers, compose} from 'redux';
 import cardReducer from '../views/GoalCard/reducer';
+import studiesReducer from '../views/Study/views/Studies/reducer';
 
   const  reducers = {
-        card: cardReducer
+        card: cardReducer,
+        studies: studiesReducer
     },
     reducer = combineReducers(reducers),
     store = createStore(
