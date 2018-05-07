@@ -20,3 +20,8 @@ export const recordsFetched = payload => ({
   type: 'RECORDS_FETCHED',
   payload
 });
+
+export const institutesFetched = payload => ({
+  type: 'INSTITUTES_FETCHED',
+  payload
+});

@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchStudies } from './request';
+import { fetchStudies, addRecord } from './request';
 import { startFetcing, finishedFetching, failedfetching } from './reducer/actions';
 import RecordsContainer from './components/RecordsContainer';
 
 class Studies extends Component {
   constructor(props) {
     super(props)
+    this.state = { instituteId: undefined }
   }
 
   componentDidMount () {
@@ -28,9 +29,19 @@ class Studies extends Component {
         })
   }
 
+  save = studyId => {
+    const { instituteId } = this.state;
+    addRecord(studyId, instituteId)
+  }
+
+  onChange = e => {
+    console.log(e.target.value);
+    this.setState({ instituteId: e.target.value })
+  }
+
   render (){
-    const { study } = this.props
-console.log(study.records);
+    const { study: { institutes }, study } = this.props
+    console.log(institutes);
     return (
       <div>
         <h4>{study.total_items}</h4>
@@ -38,7 +49,25 @@ console.log(study.records);
           <div>
           {
             study.studies.map((stud, index) =>
-              <RecordsContainer records={study.records} key={`study-${index}`} study={stud}/>
+              <div>
+                <RecordsContainer
+                    institutes={institutes}
+                    records={study.records}
+                    key={stud.study_id}
+                    study={stud}
+                />
+                {stud.study_id in institutes &&
+                  <select onChange={e => this.onChange(e)}>
+                    <option value="">Choose</option>
+                    {
+                      institutes[stud.study_id].map(institute =>
+                        <option value={institute.id}>{institute.name}</option>
+                      )
+                    }
+                  </select>
+                }
+                <button onClick={() => this.save(stud.study_id)}>Add</button>
+              </div>
             )
           }
         </div>
@@ -48,13 +77,14 @@ console.log(study.records);
   }
 }
 
-const mapToProps = ({study: { total, fetching, finishedFetching, studies, records}}) =>  ({
+const mapToProps = ({study: { total, fetching, finishedFetching, studies, records, institutes}}) =>  ({
   study: {
     total,
     fetching,
     finishedFetching,
     studies,
-    records
+    records,
+    institutes
   }
 })
 

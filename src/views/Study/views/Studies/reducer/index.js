@@ -1,6 +1,6 @@
 
 
-const studiesReducer = (state = { records: {} }, action) => {
+const studiesReducer = (state = { records: {}, institutes: {} }, action) => {
   switch (action.type) {
     case 'START_FETCHING_STUDIES':
       return {
@@ -36,6 +36,17 @@ const studiesReducer = (state = { records: {} }, action) => {
         recordsFetching: false,
         recordsFetched: true,
         records
+      }
+    case 'INSTITUTES_FETCHED':
+      let institutes = {
+        ...state.institutes,
+        ...action.payload
+      }
+      return {
+        ...state,
+        recordsFetching: false,
+        recordsFetched: true,
+        institutes
       }
     default:
       return state;

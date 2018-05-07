@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { recordsFetching, recordsFetched } from '../reducer/actions';
-import { fetchRecords } from '../request';
+import { recordsFetching, recordsFetched, institutesFetched } from '../reducer/actions';
+import { fetchRecords, fetchInstitutes } from '../request';
 import Record from './Record';
 
 const collapsedStyle = collapsed => ({
@@ -32,14 +32,19 @@ class RecordsContainer extends Component {
     if (this.container.offsetHeight > 82) {
       this.setState({ collapsible: true })
     }
-    const { records, study } = this.props
-    if(!(study.study_id in records)) {
+    const { records, institutes, study: { study_id } } = this.props
+    if(!(study_id in records)) {
       this.props.recordsFetching();
-      fetchRecords(study.study_id)
+      fetchRecords(study_id)
         .then(response => {
-          records[study.study_id] = response._embedded.records
+          records[study_id] = response._embedded.records
           this.props.recordsFetched(records);
         })
+      fetchInstitutes(study_id)
+      .then(response => {
+        institutes[study_id] = response._embedded.institutes
+        this.props.institutesFetched(institutes);
+      })
     }
   }
 
@@ -51,15 +56,17 @@ class RecordsContainer extends Component {
   }
 
   render() {
-    const { study, records } = this.props
-        console.log(study.study_id in records);
+    const { study, records, institutes } = this.props
     return (
       <div className="collapsible" style={collapsedStyle(this.state.collapsed)} onClick={this.toggle} >
         <div>{study.name}</div>
         <div ref={(container) => { this.container = container }} style={pContainer} >
           {study.study_id in records &&
             records[study.study_id].map((record, index) =>
-              <Record key={record.id} {...record} />
+              <Record
+                  key={record.id}
+                  record={record}
+              />
             )
           }
         </div>
@@ -71,7 +78,8 @@ class RecordsContainer extends Component {
 
 const mapDispatchToProps = dispatch => ({
   recordsFetching: () => dispatch(recordsFetching()),
-  recordsFetched: records => dispatch(recordsFetched(records))
+  recordsFetched: records => dispatch(recordsFetched(records)),
+  institutesFetched: institutes => dispatch(institutesFetched(institutes))
 })
 
 
