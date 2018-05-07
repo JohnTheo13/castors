@@ -4,7 +4,7 @@ import studiesReducer from '../views/Study/views/Studies/reducer';
 
   const  reducers = {
         card: cardReducer,
-        studies: studiesReducer
+        study: studiesReducer
     },
     reducer = combineReducers(reducers),
     store = createStore(

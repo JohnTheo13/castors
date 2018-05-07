@@ -6,3 +6,17 @@ export const finishedFetching = payload => ({
   type: 'FINISHED_FETCHING',
   payload
 });
+
+export const failedfetching = () => ({
+  type: 'FAILED_FETCHING',
+});
+
+
+export const recordsFetching = () => ({
+  type: 'RECORDS_FETCHING',
+});
+
+export const recordsFetched = payload => ({
+  type: 'RECORDS_FETCHED',
+  payload
+});
